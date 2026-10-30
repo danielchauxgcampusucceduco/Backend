@@ -2,7 +2,7 @@
 
 **Sistema de monitoreo de microservicios con Proxy de auditoría y logging** — Backend.
 
-API REST en **Spring Boot 3.3 / Java 21** que simula tres microservicios de un e-commerce de tecnología (Inventario, Pedidos y Pagos) y antepone a cada uno un **`LoggingProxy`** que audita cada llamada, controla el acceso, cachea lecturas y difiere la creación del servicio real hasta que se necesita. Las métricas resultantes alimentan el dashboard [`observability-proxy-dashboard`](../observability-proxy-dashboard), desplegado en Vercel.
+API REST en **Spring Boot 3.3 / Java 21** que simula tres microservicios de un e-commerce de tecnología (Inventario, Pedidos y Pagos) y antepone a cada uno un **`LoggingProxy`** que audita cada llamada, controla el acceso, cachea lecturas y difiere la creación del servicio real hasta que se necesita. Las métricas resultantes alimentan el dashboard [`Frontend`](https://github.com/danielchauxgcampusucceduco/Frontend), desplegado en Vercel.
 
 > Proyecto académico — Ingeniería de Software, 4.º semestre. Tema: **Patrón de Diseño Estructural Proxy** (y su contraste con **Facade**).
 
