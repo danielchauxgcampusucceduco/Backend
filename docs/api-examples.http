@@ -1,0 +1,87 @@
+### Variables (REST Client de VS Code / IntelliJ HTTP Client)
+@baseUrl = http://localhost:8080
+
+### Salud del servicio (healthcheck de Railway)
+GET {{baseUrl}}/actuator/health
+
+### Catálogo de operaciones expuestas por cada proxy
+GET {{baseUrl}}/api/services/catalog
+
+### Inventario - consultar stock (operación cacheable)
+POST {{baseUrl}}/api/services/inventory/checkStock
+Content-Type: application/json
+
+{ "sku": "LEN-TPX1C-G12" }
+
+### Inventario - reservar stock
+POST {{baseUrl}}/api/services/inventory/reserveStock
+Content-Type: application/json
+
+{ "sku": "DEL-U2724D", "quantity": 2, "orderId": "ORD-2026-001041" }
+
+### Inventario - reabastecer
+POST {{baseUrl}}/api/services/inventory/restockItem
+Content-Type: application/json
+
+{ "sku": "SAM-MZV9P2T0", "quantity": 40, "supplier": "Intcomex Colombia" }
+
+### Pedidos - crear pedido
+POST {{baseUrl}}/api/services/orders/createOrder
+Content-Type: application/json
+
+{
+  "customerId": "CUS-48213",
+  "shippingCity": "Medellin",
+  "items": [
+    { "sku": "APL-MBP14-M4P", "quantity": 1 },
+    { "sku": "LOG-MXM3S-GRF", "quantity": 2 }
+  ]
+}
+
+### Pedidos - consultar estado
+POST {{baseUrl}}/api/services/orders/getOrderStatus
+Content-Type: application/json
+
+{ "orderId": "ORD-2026-001041" }
+
+### Pedidos - cancelar
+POST {{baseUrl}}/api/services/orders/cancelOrder
+Content-Type: application/json
+
+{ "orderId": "ORD-2026-001041", "reason": "PAYMENT_TIMEOUT" }
+
+### Pagos - procesar pago (10 % de fallo aleatorio)
+POST {{baseUrl}}/api/services/payments/processPayment
+Content-Type: application/json
+
+{ "orderId": "ORD-2026-001041", "amount": 14774091.00, "currency": "COP", "method": "VISA", "cardNumber": "4111111111111111" }
+
+### Pagos - forzar caída de la pasarela (demo de alerta roja)
+POST {{baseUrl}}/api/services/payments/processPayment
+Content-Type: application/json
+
+{ "orderId": "ORD-2026-001041", "amount": 459900, "method": "NEQUI", "forceFail": true }
+
+### Pagos - estrés: multiplica la tasa de fallo base (x1..x5, máximo 60 %)
+POST {{baseUrl}}/api/services/payments/validatePaymentMethod
+Content-Type: application/json
+
+{ "method": "MASTERCARD", "cardNumber": "5500005555555559", "stressFactor": 5 }
+
+### Pagos - reembolso
+POST {{baseUrl}}/api/services/payments/refundPayment
+Content-Type: application/json
+
+{ "transactionId": "TXN-9F2C41A07B3D", "amount": 459900.00, "reason": "DEFECTIVE_ITEM" }
+
+### Simular carga (50 llamadas por defecto)
+POST {{baseUrl}}/api/metrics/simulate-load
+
+### Resumen de métricas
+GET {{baseUrl}}/api/metrics/summary
+
+### Logs filtrados y paginados
+GET {{baseUrl}}/api/metrics/logs?service=PAYMENTS&status=ERROR&from=2026-10-30T00:00:00Z&to=2026-12-31T23:59:59Z&page=0&size=20
+
+### Reiniciar auditoría
+DELETE {{baseUrl}}/api/metrics/logs

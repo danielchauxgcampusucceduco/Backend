@@ -1,0 +1,51 @@
+server:
+  # Railway injects PORT at runtime; 8080 is the local default.
+  port: ${PORT:8080}
+  shutdown: graceful
+  compression:
+    enabled: true
+    mime-types: application/json,application/problem+json
+  error:
+    include-stacktrace: never
+
+spring:
+  application:
+    name: microservice-logging-proxy-api
+  threads:
+    virtual:
+      enabled: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  mvc:
+    problemdetails:
+      enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+app:
+  cors:
+    allowed-origin-patterns: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,https://*.vercel.app}
+  proxy:
+    cache-enabled: ${PROXY_CACHE_ENABLED:true}
+    cache-ttl: ${PROXY_CACHE_TTL:5s}
+    audit-capacity: ${AUDIT_LOG_CAPACITY:10000}
+    latency-min-ms: 25
+    latency-max-ms: 320
+    payment-failure-rate: ${PAYMENT_FAILURE_RATE:0.10}
+
+logging:
+  pattern:
+    level: "%5p [%X{requestId:-system}]"
+  level:
+    com.monitoring.proxyapi: INFO
